@@ -11,30 +11,30 @@ let gameFrame = 0
 // Mouse Interactivity
 let canvasPosition = canvas.getBoundingClientRect()
 const mouse = {
-    x: canvas.width/2,
-    y: canvas.height/2,
-    click:false
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    click: false
 }
-canvas.addEventListener("mousedown", function(event){
+canvas.addEventListener("mousedown", function (event) {
     mouse.click = true
     mouse.x = event.x - canvasPosition.left;
     mouse.y = event.y - canvasPosition.top;
     // console.log(mouse.x, mouse.y)
 })
 
-window.addEventListener("resize", function(){
+window.addEventListener("resize", function () {
     canvasPosition = canvas.getBoundingClientRect()
 })
 
-canvas.addEventListener("mousedown", function(){
+canvas.addEventListener("mousedown", function () {
     mouse.click = false
 })
 
 // Player
-class Player{
-    constructor(){
+class Player {
+    constructor() {
         this.x = canvas.width
-        this.y = canvas.height/2
+        this.y = canvas.height / 2
         this.radius = 50
         this.angle = 0 //face direction
         // this.frameX = 0
@@ -43,18 +43,18 @@ class Player{
         // this.spriteWidth = 498
         // this.spriteheight = 327
     }
-    update(){
+    update() {
         const dx = this.x - mouse.x
         const dy = this.y - mouse.y
-        if (mouse.x != this.x){
-            this.x -= dx/30
+        if (mouse.x != this.x) {
+            this.x -= dx / 30
         }
-        if (mouse.y != this.y){
-            this.y -= dy/30
+        if (mouse.y != this.y) {
+            this.y -= dy / 30
         }
     }
-    
-    draw(){
+
+    draw() {
         if (mouse.click) {
             ctx.lineWidth = 1
             ctx.beginPath()
@@ -76,24 +76,24 @@ const player = new Player()
 // Bubbles
 const bubblesArray = []
 class Bubble {
-    constructor(){
+    constructor() {
         this.x = Math.random() * (canvas.width)
         this.y = canvas.height + 100
         this.radius = 40
         this.speed = Math.random() * 5 + 1
         this.distance
         this.counted = false
-        this.sound = Math.random() <= 0.5 ? "sound1" : "sound2"    
+        this.sound = Math.random() <= 0.5 ? "sound1" : "sound2"
     }
 
-    update(){
+    update() {
         this.y -= this.speed
         const dx = this.x - player.x
         const dy = this.y - player.y
-        this.distance = Math.sqrt(dx*dx + dy*dy)
+        this.distance = Math.sqrt(dx * dx + dy * dy)
     }
 
-    draw(){
+    draw() {
         ctx.fillStyle = "blue"
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
@@ -104,23 +104,23 @@ class Bubble {
 }
 
 
-function handleBubbles(){
-    if (gameFrame % 50 == 0){ // % = remainder (zbytek deleni) = every 50th is true
+function handleBubbles() {
+    if (gameFrame % 50 == 0) { // % = remainder (zbytek deleni) = every 50th is true
         bubblesArray.push(new Bubble())
         // console.log(bubblesArray.length)
     }
-    for (let i = 0; i < bubblesArray.length; i++){
+    for (let i = 0; i < bubblesArray.length; i++) {
         bubblesArray[i].update()
         bubblesArray[i].draw()
     } // <-- if .splice (remove) method is used here that may all the bubbles blinking when one of them is removed. Need to use it in other "for loop" 
-    
-    for (let i = 0; i < bubblesArray.length; i++){
-        if (bubblesArray[i].y < 0 - bubblesArray[i].radius * 2){
+
+    for (let i = 0; i < bubblesArray.length; i++) {
+        if (bubblesArray[i].y < 0 - bubblesArray[i].radius * 2) {
             bubblesArray.splice(i, 1)
         }
-        if (bubblesArray[i].distance < bubblesArray[i].radius + player.radius){
-            if (!bubblesArray[i].counted){
-                if(bubblesArray[i].sound === "sound1"){
+        if (bubblesArray[i].distance < bubblesArray[i].radius + player.radius) {
+            if (!bubblesArray[i].counted) {
+                if (bubblesArray[i].sound === "sound1") {
                     bubblePop1.play()
                 }
                 else {
@@ -128,10 +128,10 @@ function handleBubbles(){
                 }
                 score++
                 bubblesArray[i].counted = true
-                bubblesArray.splice(i, 1) 
+                bubblesArray.splice(i, 1)
             }
         }
-    }   
+    }
 }
 const bubblePop1 = document.createElement("audio")
 bubblePop1.src = "./assets/sounds/bubble1.mp3"
@@ -140,22 +140,22 @@ bubblePop2.src = "./assets/sounds/bubble2.mp3"
 
 // Enemies
 const enemyArray = []
-class Enemy{
-    constructor(){
+class Enemy {
+    constructor() {
         this.x = canvas.width + 200
         this.y = Math.random() * (canvas.height)
         this.radius = 30
         this.speed = Math.random() * 2 + 2
     }
-    draw(){
+    draw() {
         ctx.fillStyle = "red"
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
         ctx.fill()
     }
-    update(){
+    update() {
         this.x -= this.speed
-        if (this.x < 0 - this.radius * 2){
+        if (this.x < 0 - this.radius * 2) {
             this.x = canvas.width + 200
             this.y = Math.random() * (canvas.height + 60)
             this.speed = Math.random() * 2 + 2
@@ -164,31 +164,31 @@ class Enemy{
 
         const dx = this.x - player.x
         const dy = this.y - player.y
-        this.distance = Math.sqrt(dx*dx + dy*dy)
-        if (this.distance < this.radius + player.radius){
+        this.distance = Math.sqrt(dx * dx + dy * dy)
+        if (this.distance < this.radius + player.radius) {
             gameOverSound.play()
-            backgorundMusic.pause()      
+            backgorundMusic.pause()
             document.getElementById("newGame").style.display = "block"
-            document.getElementById("newGame").addEventListener("click", function reload(){
+            document.getElementById("newGame").addEventListener("click", function reload() {
                 location.reload()
-            }) 
+            })
             handleGameOver()
         }
     }
 }
 const enemy1 = new Enemy
-function handleEnemies(){
+function handleEnemies() {
 
-    if (gameFrame % 1000 == 0){
+    if (gameFrame % 1000 == 0) {
         enemyArray.push(new Enemy())
         // console.log("Enemies: " + (enemyArray.length + 1))
     }
-    for (let i = 0; i < enemyArray.length; i++){
+    for (let i = 0; i < enemyArray.length; i++) {
         enemyArray[i].update()
         enemyArray[i].draw()
     }
-        enemy1.update()
-        enemy1.draw()   
+    enemy1.update()
+    enemy1.draw()
 }
 
 const gameOverSound = document.createElement("audio")
@@ -196,7 +196,7 @@ gameOverSound.src = "./assets/sounds/gameOver.wav"
 
 // End game
 
-function handleGameOver(){
+function handleGameOver() {
     ctx.fillStyle = "Black"
     ctx.font = "80px Arial"
     ctx.fillText("Game over!", 190, 250)
@@ -207,7 +207,7 @@ function handleGameOver(){
 
 
 // Animation loop
-function animate(){
+function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     player.update()
     player.draw()
@@ -221,11 +221,11 @@ function animate(){
     handleBubbles()
     handleEnemies()
     music()
-    if(!gameOver){
-     requestAnimationFrame(animate)
+    if (!gameOver) {
+        requestAnimationFrame(animate)
     }
 }
-animate() 
+animate()
 
 // Background music
 
@@ -235,23 +235,15 @@ backgorundMusic.volume = 0.5
 backgorundMusic.playbackRate = 0.8
 backgorundMusic.loop = true
 
-function music(){
-    if (score === 1){
-        backgorundMusic.play() 
+function music() {
+    if (score === 1) {
+        backgorundMusic.play()
     }
-    if (gameFrame % 1000 === 0){
+    if (gameFrame % 1000 === 0) {
         backgorundMusic.playbackRate = backgorundMusic.playbackRate + 0.05
         // console.log("music speed: " + backgorundMusic.playbackRate)                   
-    } 
-}
-
-const mute = document.getElementById("volume")
-document.getElementById("volume").addEventListener("click", function(){
-    if(mute.src = "./assets/img/mute.png"){
-        backgorundMusic.pause()
-        mute.src = "./assets/img/unmute.png"
     }
-})
+}
 
 
 

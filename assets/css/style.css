@@ -43,16 +43,3 @@ body {
 #newGame:hover{
     background-color: gray;
 }
-
-#volume{
-    height: 50px;
-    padding-left: 15px;
-
-    position: absolute;
-    margin-left: 435px;
-}
-
-#volume:hover{
-    cursor: pointer;
-    
-}
