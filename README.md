@@ -1,2 +1,2 @@
 # BubbleGame
-Jednoducha hra naprogramovana pomoci HTML CSS JS. Delal jsem to podle tutorialu a nasledne upravoval podle sebe.
+Vanilla javascript game. I did it by tutorial and made it better by myself
